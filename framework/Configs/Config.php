@@ -8,11 +8,11 @@ class Config
 
     public function __construct()
     {
-        $configs = array_values(array_diff(scandir('../config'), array('.', '..')));
+        $configs = array_values(array_diff(scandir(__APP_ROOT__ . "/../config"), array('.', '..')));
 
         foreach($configs as $config)
         {
-            $this->configArray[rtrim($config, ".php")] = require("../config/" . $config);
+            $this->configArray[rtrim($config, ".php")] = require(__APP_ROOT__ . "/../config/" . $config);
         }
     }
 

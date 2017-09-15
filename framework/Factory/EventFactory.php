@@ -18,7 +18,7 @@ class EventFactory implements FactoryInterface
         static::$namespace = $config["event_namespace"];
     }
 
-    public static function build($type = "", $path = "")
+    public static function build($type, $path = "")
     {
         static::init();
 

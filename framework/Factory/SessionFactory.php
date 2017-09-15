@@ -17,7 +17,7 @@ class SessionFactory implements FactoryInterface
         static::$namespace = $config["session_namespace"];
     }
 
-    public static function build($type = "", $path = "")
+    public static function build($type, $path = "")
     {
         static::init();
 

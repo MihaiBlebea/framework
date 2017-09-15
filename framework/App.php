@@ -19,7 +19,7 @@ class App
 
     public function __construct()
     {
-        $config = require_once('../config/component.php');
+        $config = require_once(__APP_ROOT__ . '/../config/component.php');
         $this->config = $config;
     }
 
@@ -53,7 +53,6 @@ class App
         $event = EventFactory::build("Error", "framework");
         $event->attach($emailListener)->attach($logListener)->trigger($message);
 
-        //Check if fatal error and die
     }
 
     public function testApp()

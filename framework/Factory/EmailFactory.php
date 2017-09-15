@@ -22,9 +22,9 @@ class EmailFactory implements FactoryInterface
 
         if($path == "")
         {
-            $className = static::$namespace . ucfirst($type);
+            $className = static::$namespace . ucfirst($type) . "Email";
         } elseif($path == "framework"){
-            $className = "Framework\\Emails\\" . ucfirst($type);
+            $className = "Framework\\Emails\\" . ucfirst($type) . "Email";
         } else {
             throw new Exception("Unknown path to factory", 1);
         }

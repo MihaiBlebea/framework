@@ -3,11 +3,9 @@
 namespace Framework\Factory;
 
 use Framework\Interfaces\FactoryInterface;
-use Exception;
-use Config;
 use Framework\Injectables\Injector;
 
-class ListenerFactory implements FactoryInterface
+class CommandFactory implements FactoryInterface
 {
     private static $namespace;
 
@@ -15,7 +13,7 @@ class ListenerFactory implements FactoryInterface
     {
         $config = Injector::resolve("Config");
         $config = $config->getConfig("application");
-        static::$namespace = $config["listener_namespace"];
+        static::$namespace = $config["command_namespace"];
     }
 
     public static function build($type, $path = "")
@@ -24,23 +22,24 @@ class ListenerFactory implements FactoryInterface
 
         if($path == "")
         {
-            $className = static::$namespace . ucfirst($type) . "Listener";
+            $className = static::$namespace . ucfirst($type) . "Command";
         } elseif($path == "framework"){
-            $className = "Framework\\Listeners\\" . ucfirst($type) . "Listener";
+            $className = "Framework\\Commands\\" . ucfirst($type) . "Command";
         } else {
             throw new Exception("Unknown path to factory", 1);
         }
 
         if($type == "")
         {
-             throw new Exception('No type given');
+            throw new \Exception('No command found');
         } else {
             if(class_exists($className))
             {
                 return new $className();
             } else {
-                throw new Exception($className . ' does not exist.');
+                throw new \Exception('Command class not found.');
             }
         }
     }
+
 }

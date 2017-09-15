@@ -14,8 +14,6 @@ class RouterComponent extends Injector implements ComponentInterface
     public function boot()
     {
         self::register('Router', function() {
-            //$session = new PreviousPathSession();
-            //$request = new Request($session);
             $request = Injector::resolve("Request");
             $config  = new Config();
             $router  = new Router($request, $config);
@@ -27,6 +25,6 @@ class RouterComponent extends Injector implements ComponentInterface
 
     public function run($instance)
     {
-        $instance->compare();
+        $instance->compare();    
     }
 }

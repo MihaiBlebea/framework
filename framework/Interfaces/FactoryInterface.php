@@ -9,5 +9,5 @@ interface FactoryInterface
 {
     public static function init();
 
-    public static function build($type = "", $path = "");
+    public static function build($type, $path = "");
 }

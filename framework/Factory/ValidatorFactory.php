@@ -14,7 +14,7 @@ class ValidatorFactory implements FactoryInterface
 
     }
 
-    public static function build($type = "", $path = "")
+    public static function build($type, $path = "")
     {
         if($type !== "")
         {
