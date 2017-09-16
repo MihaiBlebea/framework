@@ -7,15 +7,15 @@ use Framework\Commands\Command;
 use Framework\Injectables\Injector;
 use Framework\Console\FileCreator;
 
-class CreateListenerCommand extends Command implements CommandInterface
+class CreateComponentCommand extends Command implements CommandInterface
 {
     private $payload;
 
-    private $path = __APP_ROOT__ . "/../src/Listeners";
+    private $path = __APP_ROOT__ . "/../src/Managers";
 
     public function input($payload)
     {
-        $this->payload = (strpos($payload, "Listener") !== false) ? ucfirst($payload) : ucfirst($payload) . "Listener";
+        $this->payload = (strpos($payload, "Component") !== false) ? ucfirst($payload) : ucfirst($payload) . "Component";
         $this->completePath = $this->path . "/" . $this->payload . ".php";
         $this->process();
     }
@@ -29,15 +29,22 @@ class CreateListenerCommand extends Command implements CommandInterface
 
         $config = Injector::resolve("Config");
         $config = $config->getConfig("application");
-        $namespace = $config["listener_namespace"];
+        $namespace = $config["component_namespace"];
 
         $content = "<?php \n\n" .
                    "namespace " . rtrim($namespace, "\\") . ";\n\n" .
-                   "use Framework\Events\Subject;\n" .
-                   "use Framework\Interfaces\ListenerInterface;\n\n" .
-                   "class " . $this->payload . " implements ListenerInterface\n" .
+                   "use Framework\Injectables\Injector;\n" .
+                   "use Framework\Interfaces\ComponentInterface;\n\n" .
+                   "class " . $this->payload . " extends Injector implements ComponentInterface\n" .
                    "{\n" .
-                       "\tpublic function listen(Subject \$subject)\n" .
+                       "\tpublic function boot()\n" .
+                       "\t{\n" .
+                            "\t\tself::register(\"NewComponent\", function() {\n" .
+                               "\t\t\t\$comp = new New();\n" .
+                               "\t\t\treturn \$comp;\n" .
+                           "\t\t});\n" .
+                       "\t}\n\n" .
+                       "\tpublic function run(\$instance)\n" .
                        "\t{\n\n" .
                        "\t}\n" .
                    "}";

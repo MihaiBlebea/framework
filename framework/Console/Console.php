@@ -16,7 +16,10 @@ class Console
         "create:model"      => "Build a Model class",
         "create:event"      => "Build an Event class",
         "create:listener"   => "Build a Listener class",
-        "create:email"      => "Build an Email class"
+        "create:email"      => "Build an Email class",
+        "create:manager"    => "Build a Manager class",
+        "create:component"  => "Build a Component class",
+        "create:rule"       => "Build a Rule class"
     ];
 
     public function __construct($argv, $argc)

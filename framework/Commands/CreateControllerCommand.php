@@ -15,8 +15,8 @@ class CreateControllerCommand extends Command implements CommandInterface
 
     public function input($payload)
     {
-        $this->payload = ucfirst($payload);
-        $this->completePath = $this->path . "/" . $this->payload . "Controller.php";
+        $this->payload = (strpos($payload, "Controller") !== false) ? ucfirst($payload) : ucfirst($payload) . "Controller";
+        $this->completePath = $this->path . "/" . $this->payload . ".php";
         $this->process();
     }
 
@@ -33,7 +33,7 @@ class CreateControllerCommand extends Command implements CommandInterface
 
         $content = "<?php \n\n" .
                    "namespace " . rtrim($namespace, "\\") . ";\n\n" .
-                   "class " . $this->payload . "Controller \n" .
+                   "class " . $this->payload . " \n" .
                    "{\n\n" .
                    "}";
 
@@ -42,7 +42,7 @@ class CreateControllerCommand extends Command implements CommandInterface
         $file = file_exists($this->completePath);
         if($file == true)
         {
-            $this->output("success", "Success, " . $this->payload . "Controller created !");
+            $this->output("success", "Success, " . $this->payload . " created !");
         } elseif($file == false) {
             $this->output("error", "Error, file was not created !");
         } else {

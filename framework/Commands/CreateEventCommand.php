@@ -15,8 +15,8 @@ class CreateEventCommand extends Command implements CommandInterface
 
     public function input($payload)
     {
-        $this->payload = ucfirst($payload);
-        $this->completePath = $this->path . "/" . $this->payload . "Event.php";
+        $this->payload = (strpos($payload, "Event") !== false) ? ucfirst($payload) : ucfirst($payload) . "Event";
+        $this->completePath = $this->path . "/" . $this->payload . ".php";
         $this->process();
     }
 
@@ -64,7 +64,7 @@ class CreateEventCommand extends Command implements CommandInterface
         $file = file_exists($this->completePath);
         if($file == true)
         {
-            $this->output("success", "Success, " . $this->payload . "Event created !");
+            $this->output("success", "Success, " . $this->payload . " created !");
         } elseif($file == false) {
             $this->output("error", "Error, file was not created !");
         } else {

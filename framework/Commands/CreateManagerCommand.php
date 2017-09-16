@@ -7,15 +7,15 @@ use Framework\Commands\Command;
 use Framework\Injectables\Injector;
 use Framework\Console\FileCreator;
 
-class CreateListenerCommand extends Command implements CommandInterface
+class CreateManagerCommand extends Command implements CommandInterface
 {
     private $payload;
 
-    private $path = __APP_ROOT__ . "/../src/Listeners";
+    private $path = __APP_ROOT__ . "/../src/Managers";
 
     public function input($payload)
     {
-        $this->payload = (strpos($payload, "Listener") !== false) ? ucfirst($payload) : ucfirst($payload) . "Listener";
+        $this->payload = (strpos($payload, "Manager") !== false) ? ucfirst($payload) : ucfirst($payload) . "Manager";
         $this->completePath = $this->path . "/" . $this->payload . ".php";
         $this->process();
     }
@@ -29,15 +29,15 @@ class CreateListenerCommand extends Command implements CommandInterface
 
         $config = Injector::resolve("Config");
         $config = $config->getConfig("application");
-        $namespace = $config["listener_namespace"];
+        $namespace = $config["manager_namespace"];
 
         $content = "<?php \n\n" .
                    "namespace " . rtrim($namespace, "\\") . ";\n\n" .
-                   "use Framework\Events\Subject;\n" .
-                   "use Framework\Interfaces\ListenerInterface;\n\n" .
-                   "class " . $this->payload . " implements ListenerInterface\n" .
+                   "use Framework\Managers\Manager;\n" .
+                   "use Framework\Interfaces\ManagerInterface;\n\n" .
+                   "class " . $this->payload . " implements ManagerInterface\n" .
                    "{\n" .
-                       "\tpublic function listen(Subject \$subject)\n" .
+                       "\tpublic function run()\n" .
                        "\t{\n\n" .
                        "\t}\n" .
                    "}";

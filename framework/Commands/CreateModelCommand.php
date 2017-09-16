@@ -15,7 +15,7 @@ class CreateModelCommand extends Command implements CommandInterface
 
     public function input($payload)
     {
-        $this->payload = ucfirst($payload);
+        $this->payload = (strpos($payload, "Model") !== false) ? ucfirst(rtrim($payload, "Model")) : ucfirst($payload);
         $this->completePath = $this->path . "/" . $this->payload . ".php";
         $this->process();
     }

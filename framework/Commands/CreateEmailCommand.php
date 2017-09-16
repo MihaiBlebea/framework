@@ -15,7 +15,7 @@ class CreateEmailCommand extends Command implements CommandInterface
 
     public function input($payload)
     {
-        $this->payload = ucfirst($payload);
+        $this->payload = (strpos($payload, "Email") !== false) ? ucfirst($payload) : ucfirst($payload) . "Email";;
         $this->completePath = $this->path . "/" . $this->payload . ".php";
         $this->process();
     }
@@ -44,14 +44,14 @@ class CreateEmailCommand extends Command implements CommandInterface
                            "\t\t\$email->htmlBody(\"This is the message: \" . \$message);\n" .
                            "\t\t\$email->setAddress(\"send-to-this-email@email.com\");\n" .
                            "\t\t\$email->send();\n" .
-                       "\t}\n" . 
+                       "\t}\n" .
                    "}";
         FileCreator::create($this->completePath, $content);
 
         $file = file_exists($this->completePath);
         if($file == true)
         {
-            $this->output("success", "Success, " . $this->payload . "Email created !");
+            $this->output("success", "Success, " . $this->payload . " created !");
         } elseif($file == false) {
             $this->output("error", "Error, file was not created !");
         } else {
