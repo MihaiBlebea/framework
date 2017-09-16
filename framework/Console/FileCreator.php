@@ -6,7 +6,7 @@ class FileCreator
 {
     public static function create($file, $content)
     {
-        $file = fopen($file . ".php", "w");
+        $file = fopen($file, "w");
         fwrite($file, $content);
         fclose($file);
     }

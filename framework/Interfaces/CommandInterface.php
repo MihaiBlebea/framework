@@ -10,6 +10,4 @@ interface CommandInterface
     public function input($payload);
 
     public function process();
-
-    public function output();
 }
