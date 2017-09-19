@@ -31,7 +31,7 @@ class Request
         {
             $this->payload = $this->get();
         } elseif ($this->method == "POST") {
-            $this->payload->post();
+            $this->payload = $this->post();
         } else {
             throw new Exception("Error Processing Request", 1);
         }
