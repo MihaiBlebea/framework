@@ -38,14 +38,14 @@ class CreateRuleCommand extends Command implements CommandInterface
                    "use Framework\RouterRules\Rule;\n\n" .
                    "class " . $this->payload . " extends Rule implements RouterRuleInterface\n" .
                    "{\n" .
-                       "\tpublic static function apply(\$params = null)\n" .
+                       "\tpublic function apply(\$params = null)\n" .
                        "\t{\n" .
                            "\t\tif(true)\n" .
                            "\t\t{\n" .
                                "\t\t\t\$this->next();\n" .
                            "\t\t}\n" .
                        "\t}\n\n" .
-                       "\tpublic static function fail()\n" .
+                       "\tpublic function fail()\n" .
                        "\t{\n" .
                            "\t\tdd(\"failed rule\");\n" .
                        "\t}\n" .
