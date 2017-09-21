@@ -81,7 +81,7 @@ class Router
         }
         $url = $this->concatParams($params);
 
-        $this->navigateToUrl($url);
+        $this->goToUrl($url);
     }
 
     // String together and build an url from different params
@@ -96,9 +96,14 @@ class Router
     }
 
     // Redirect to a specific url
-    public function navigateToUrl($url)
+    public function goToUrl($url = "")
     {
-        header("Location: " . $this->config["app_path"] . $url);
+        if($url == "")
+        {
+            header("Location: " . $this->config["app_path"] . "/" . $this->goTo);
+        } else {
+            header("Location: " . $this->config["app_path"] . "/" . $url);
+        }
         die();
     }
 

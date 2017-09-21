@@ -21,25 +21,31 @@ class Binder
         $result = array();
         foreach($modelsParams as $model)
         {
-            array_push($result, self::resolveBind($model));
+            if(isset($model["model"]))
+            {
+                array_push($result, self::resolveBind($model));
+            } else {
+                array_push($result, $model["param"]);
+            }
         }
+
         return $result;
     }
 
     private static function combineParamsWithModels(array $params, array $models)
     {
-        if(count($params) == count($models))
+        $result = array();
+        foreach($params as $index => $param)
         {
-            $result = array();
-            foreach($params as $index => $param)
+            if(array_key_exists($param["id"], $models))
             {
                 $param["model"] = $models[$param["id"]];
                 array_push($result, $param);
+            } else {
+                array_push($result, $param);
             }
-            return $result;
-        } else {
-            throw new Exception("Params array do not have the same number of elements as Models array", 1);
         }
+        return $result;
     }
 
     private static function resolveBind(array $model)
