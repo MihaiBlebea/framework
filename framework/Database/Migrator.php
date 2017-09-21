@@ -2,6 +2,10 @@
 
 namespace Framework\Database;
 
+use Connector;
+use Blueprint;
+use Framework\Models\Migration;
+
 class Migrator
 {
     // holds instance of Connector
@@ -13,10 +17,14 @@ class Migrator
     // The migration model
     public $migrationModel;
 
-    public function __construct(Connector $connector, Blueprint $blueprint, Migration $migration)
+    public function __construct(Connector $connector, Migration $migration)
     {
         $this->$migrationModel = $migration;
         $this->connector = $connector->getConnector();
+    }
+
+    public function plan(Blueprint $blueprint)
+    {
         $this->blueprint = $blueprint->getPlan;
     }
 
