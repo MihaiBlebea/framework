@@ -250,7 +250,8 @@ class Model {
     {
         if($this->schema == "")
         {
-            throw new Exception("No conditions where selected");
+            //throw new Exception("No conditions where selected");
+            $this->schema = "id = '" . $this->id . "'";
         }
         return $statement = $this->connector->prepare("DELETE FROM " . $this->getTable() . " WHERE " . $this->schema)->execute();
     }

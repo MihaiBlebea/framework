@@ -29,7 +29,7 @@ class Router
 
     private $lastRoute;
 
-    private $hasDinamicParams = false;
+    // private $hasDinamicParams = false;
 
     private $goTo;
 
@@ -282,10 +282,10 @@ class Router
     // Found route in array comparision
     private function callFoundInArray()
     {
-        if(array_key_exists("binds", $this->options))
-        {
-            $this->hasDinamicParams = true;
-        }
+        // if(array_key_exists("binds", $this->options))
+        // {
+        //     $this->hasDinamicParams = true;
+        // }
         $this->beforeController($this->request, $this->options);
     }
 
@@ -304,14 +304,14 @@ class Router
             $rules = GateKeeper::call($options["rules"]);
         }
 
-        if($this->hasDinamicParams == true)
+        if(isset($options["binds"]))
         {
             //Also check if the models were not found in the database
             $models = Binder::bind($this->dinamicParams, $options["binds"]);
             return $this->callController($models);
         }
-
-        return $this->callController();
+        // If no binding is present then just pass the dynamic params to the callController method
+        return $this->callController($this->dinamicParams);
     }
 
     // Call the controller and pass the request with the specific params
