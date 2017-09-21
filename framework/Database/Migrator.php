@@ -82,7 +82,9 @@ class Migrator
         $result = $this->connector->execute($schema);
         if($result)
         {
-            $this->migrationModel->where("table_name", "=", $name)->delete();
+            $this->migrationModel->where("table_name", "=", $name)->update([
+                "status" => 0
+            ]);
         }
     }
 
