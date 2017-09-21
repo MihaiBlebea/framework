@@ -158,6 +158,10 @@ class Model {
     public function update(array $array)
     {
         $this->updateSchema($array);
+        if($this->schema == "")
+        {
+            $this->schema = "id = '" . $this->id . "'";
+        }
         return $statement = $this->connector->prepare("UPDATE " . $this->getTable() . " SET " . $this->updateSchema . " WHERE " . $this->schema)->execute();
     }
 
@@ -255,12 +259,4 @@ class Model {
         }
         return $statement = $this->connector->prepare("DELETE FROM " . $this->getTable() . " WHERE " . $this->schema)->execute();
     }
-
-    /*
-    public static function __callStatic($name, $arguments)
-    {
-        $class = get_called_class();
-        call_user_func_array(array(new $class(), $name), $arguments);
-    }
-    */
 }

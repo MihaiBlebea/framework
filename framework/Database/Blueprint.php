@@ -1,19 +1,18 @@
 <?php
 
-namespace InstaRouter\Database;
-
-use InstaRouter\Database\Worker;
+namespace Framework\Database;
 
 class Blueprint
 {
-    public $table;
-    public $materials = array();
-    public $plan;
+    private $table;
+    private $materials = array();
+    private $plan;
 
-    public function collect($material)
+    public function collect($table, $materials)
     {
-        array_push($this->materials, $material);
-        return $this->materials;
+        $this->table = $table;
+        array_push($this->materials, $materials);
+        return $this;
     }
 
     public function build()
@@ -29,25 +28,15 @@ class Blueprint
             }
         }
         $this->plan = "CREATE TABLE " . $this->table . " (" . $schema . ")";
-        echo $this->plan;
-        return $this->migrate($this->plan);
     }
 
-    public function migrate($sql)
+    public getPlan()
     {
-        $worker = new Worker();
-        $conn = $worker->connect();
-
-        if ($conn->query($sql) !== true) {
-            echo $conn->error;
-        } else {
-            return true;
-        }
+        return $this->plan;
     }
 
-    public function drop()
+    public getTable()
     {
-        $sql = "DROP TABLE IF EXISTS " . $this->table;
-        $this->migrate($sql);
+        return $this->table;
     }
 }
