@@ -86,7 +86,12 @@ class Request
     {
         if(array_key_exists($element, $this->payload))
         {
-            return $this->payload[$element];
+            if(is_object($this->payload))
+            {
+                return $this->payload->$element;
+            } else {
+                return $this->payload[$element];
+            }
         }
     }
 

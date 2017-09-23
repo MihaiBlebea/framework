@@ -136,7 +136,10 @@ class Router
         {
             if($this->lastMethod == "GET")
             {
-                $this->getRoutes[$this->lastRoute]["rules"] = $this->groups[$name]["rules"];
+                if(isset($name["rules"]))
+                {
+                    $this->getRoutes[$this->lastRoute]["rules"] = $this->groups[$name]["rules"];
+                }
                 if(array_key_exists("prefix", $this->groups[$name]))
                 {
                     $prefix = $this->groups[$name]["prefix"];
@@ -146,7 +149,10 @@ class Router
                 }
 
             } elseif($this->lastMethod == "POST") {
-                $this->postRoutes[$this->lastRoute]["rules"] = $this->groups[$name]["rules"];
+                if(isset($name["rules"]))
+                {
+                    $this->postRoutes[$this->lastRoute]["rules"] = $this->groups[$name]["rules"];
+                }
                 if(array_key_exists("prefix", $this->groups[$name]))
                 {
                     $prefix = $this->groups[$name]["prefix"];
@@ -316,7 +322,7 @@ class Router
             return $this->callController($models);
         }
         // If no binding is present then just pass the dynamic params to the callController method
-        return $this->callController($this->dinamicParams);
+        return $this->callController(array_column($this->dinamicParams, 'param'));
     }
 
     // Call the controller and pass the request with the specific params

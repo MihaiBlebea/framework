@@ -20,8 +20,14 @@ class TemplateEngine extends \Smarty
         $this->config = $config;
         $this->login = $login;
 
+        $this->settings();
         $this->setFolders();
         $this->assignGlobalVariables();
+    }
+
+    public function settings()
+    {
+        $this->config_overwrite = false;
     }
 
     public function setFolders()

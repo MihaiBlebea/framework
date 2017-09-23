@@ -11,7 +11,7 @@ class CreateComponentCommand extends Command implements CommandInterface
 {
     private $payload;
 
-    private $path = __APP_ROOT__ . "/../src/Managers";
+    private $path = __APP_ROOT__ . "/../src/Commands";
 
     public function input($payload)
     {
