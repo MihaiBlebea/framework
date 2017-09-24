@@ -12,7 +12,6 @@ class GateKeeper
         {
             $rule = new ReflectionMethod($value, 'apply');
             $rule->invoke(new $value());
-
         }
         return true;
     }

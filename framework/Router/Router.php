@@ -15,7 +15,7 @@ class Router
 
     private $routerPathFile = array();
 
-    private $getRoutes      = array();
+    public $getRoutes      = array();
 
     private $postRoutes     = array();
 
@@ -23,7 +23,7 @@ class Router
 
     private $options        = array();
 
-    private $groups         = array();
+    public $groups         = array();
 
     private $lastMethod;
 
@@ -136,7 +136,11 @@ class Router
         {
             if($this->lastMethod == "GET")
             {
-                if(isset($name["rules"]))
+                // if(isset($name["rules"]))
+                // {
+                //     $this->getRoutes[$this->lastRoute]["rules"] = $this->groups[$name]["rules"];
+                // }
+                if(array_key_exists("rules", $this->groups[$name]))
                 {
                     $this->getRoutes[$this->lastRoute]["rules"] = $this->groups[$name]["rules"];
                 }
