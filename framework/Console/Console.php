@@ -19,7 +19,8 @@ class Console
         "create:email"      => "Build an Email class",
         "create:manager"    => "Build a Manager class",
         "create:component"  => "Build a Component class",
-        "create:rule"       => "Build a Rule class"
+        "create:rule"       => "Build a Rule class",
+        "install:app"       => "Create additional folders and files"
     ];
 
     public function __construct($argv, $argc)
@@ -51,9 +52,17 @@ class Console
     {
         if(array_key_exists($command, $this->commandList))
         {
+            // Call the list command
             if($command == "list")
             {
                 $this->callCommandClass("ListMenu", $name);
+                die();
+            }
+
+            // Call the install app command
+            if($command == "install:app")
+            {
+                $this->callCommandClass("Install", $name);
                 die();
             }
 

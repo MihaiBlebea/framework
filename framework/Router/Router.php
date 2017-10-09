@@ -59,7 +59,7 @@ class Router
     {
         foreach($this->getRoutes as $index => $routeOptions)
         {
-            if($routeOptions["name"] == $name)
+            if(isset($routeOptions["name"]) && $routeOptions["name"] == $name)
             {
                 $this->goTo = $index;
             }
