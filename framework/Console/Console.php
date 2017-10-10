@@ -20,7 +20,7 @@ class Console
         "create:manager"    => "Build a Manager class",
         "create:component"  => "Build a Component class",
         "create:rule"       => "Build a Rule class",
-        "install:app"       => "Create additional folders and files"
+
     ];
 
     public function __construct($argv, $argc)
@@ -56,13 +56,6 @@ class Console
             if($command == "list")
             {
                 $this->callCommandClass("ListMenu", $name);
-                die();
-            }
-
-            // Call the install app command
-            if($command == "install:app")
-            {
-                $this->callCommandClass("Install", $name);
                 die();
             }
 
