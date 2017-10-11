@@ -6,10 +6,13 @@ use Framework\Injectables\Injector;
 use Framework\Log\Logger;
 use Framework\Factory\EventFactory;
 use Framework\Factory\ListenerFactory;
+use Framework\Configs\Config;
 
 class App
 {
-    public $config = array();
+    public $components = array();
+
+    private $env = null;
 
     private $booted = false;
 
@@ -19,13 +22,15 @@ class App
 
     public function __construct()
     {
-        $config = require_once(__APP_ROOT__ . '/../config/component.php');
-        $this->config = $config;
+        $config = new Config();
+
+        $this->env = $config->getConfig("application")["app_environment"];
+        $this->components = $config->getConfig("component")["components"];
     }
 
     public function boot()
     {
-        foreach($this->config['components'] as $namespace)
+        foreach($this->components as $namespace)
         {
             $component = new $namespace();
             $component->boot();
@@ -35,24 +40,23 @@ class App
 
     public function init()
     {
-        foreach($this->config['components'] as $index => $namespace)
+        foreach($this->components as $index => $namespace)
         {
             $instance = Injector::resolve($index);
             $component = new $namespace();
-            $component->run($instance);
+
+            if($index == "Whoops")
+            {
+                if($this->env == "development")
+                {
+                    $component->run($instance);
+                } else {
+                    error_reporting(0);
+                }
+            } else {
+                $component->run($instance);
+            }
         }
-    }
-
-    public function setErrorHandler($errno, $errstr, $errfile, $errline)
-    {
-        $time = date("Y-m-d H:i:s");
-        $message = $time . ": Error name => " . $errno . " Error message => " . $errstr . " in file " . $errfile . " line " . $errline;
-
-        $emailListener = ListenerFactory::build("EmailErrorToAdmin", "framework");
-        $logListener = ListenerFactory::build("LogError", "framework");
-        $event = EventFactory::build("Error", "framework");
-        $event->attach($emailListener)->attach($logListener)->trigger($message);
-
     }
 
     public function testApp()

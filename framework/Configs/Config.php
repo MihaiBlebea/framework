@@ -23,6 +23,11 @@ class Config
 
     public function getConfig($file)
     {
+        if(array_key_exists($file, $this->configArray) == false)
+        {
+            $file .= ".exemple";
+            return $this->configArray[$file];
+        }
         return $this->configArray[$file];
     }
 }

@@ -346,9 +346,9 @@ class Router
         // Check if Request payload is empty and if not pass it to controller
         if($this->request->getAllPayload() !== [])
         {
-            array_unshift($models, $this->request);
+            array_push($models, $this->request);
         }
-
+        
         call_user_func_array(array($class, $method), $models);
     }
 }
