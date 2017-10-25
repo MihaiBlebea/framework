@@ -59,6 +59,11 @@ class Model {
      */
     public function __construct()
     {
+        $this->connect();
+    }
+
+    private function connect()
+    {
         $connector = Injector::resolve("Connector");
         $this->connector = $connector->getConnector();
     }
@@ -111,8 +116,11 @@ class Model {
      */
     public function create(array $array)
     {
+        $this->connect();
         $this->createSchema($array);
-        return $statement = $this->connector->prepare("INSERT INTO " . $this->getTable() . " ( " . $this->insertKeySchema . " ) VALUES ( " . $this->insertValueSchema . " )")->execute();
+        $statement = $this->connector->prepare("INSERT INTO " . $this->getTable() . " ( " . $this->insertKeySchema . " ) VALUES ( " . $this->insertValueSchema . " )")->execute();
+        $this->close();
+        return $statement;
     }
 
     /**
@@ -157,12 +165,15 @@ class Model {
      */
     public function update(array $array)
     {
+        $this->connect();
         $this->updateSchema($array);
         if($this->schema == "")
         {
             $this->schema = "id = '" . $this->id . "'";
         }
-        return $statement = $this->connector->prepare("UPDATE " . $this->getTable() . " SET " . $this->updateSchema . " WHERE " . $this->schema)->execute();
+        $statement = $this->connector->prepare("UPDATE " . $this->getTable() . " SET " . $this->updateSchema . " WHERE " . $this->schema)->execute();
+        $this->close();
+        return $statement;
     }
 
     /**
@@ -196,11 +207,14 @@ class Model {
      */
     public function selectOne()
     {
+        $this->connect();
         if($this->schema == "")
         {
             throw new Exception("No conditions where selected");
         }
-        return $this->connector->query("SELECT * FROM " . $this->getTable() . " WHERE " . $this->schema)->fetchObject(get_called_class());
+        $statement = $this->connector->query("SELECT * FROM " . $this->getTable() . " WHERE " . $this->schema)->fetchObject(get_called_class());
+        $this->close();
+        return $statement;
     }
 
     /**
@@ -210,11 +224,14 @@ class Model {
      */
     public function select()
     {
+        $this->connect();
         if($this->schema == "")
         {
             throw new Exception("No conditions where selected");
         }
-        return $this->connector->query("SELECT * FROM " . $this->getTable() . " WHERE " . $this->schema . $this->sortSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+        $statement = $this->connector->query("SELECT * FROM " . $this->getTable() . " WHERE " . $this->schema . $this->sortSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+        $this->close();
+        return $statement;
     }
 
     /**
@@ -224,7 +241,10 @@ class Model {
      */
     public function selectAll()
     {
-        return $this->connector->query("SELECT * FROM " . $this->getTable() . $this->sortSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+        $this->connect();
+        $statement = $this->connector->query("SELECT * FROM " . $this->getTable() . $this->sortSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+        $this->close();
+        return $statement;
     }
 
     /**
@@ -252,11 +272,19 @@ class Model {
      */
     public function delete()
     {
+        $this->connect();
         if($this->schema == "")
         {
             //throw new Exception("No conditions where selected");
             $this->schema = "id = '" . $this->id . "'";
         }
-        return $statement = $this->connector->prepare("DELETE FROM " . $this->getTable() . " WHERE " . $this->schema)->execute();
+        $statement = $this->connector->prepare("DELETE FROM " . $this->getTable() . " WHERE " . $this->schema)->execute();
+        $this->close();
+        return $statement;
+    }
+
+    private function close()
+    {
+        $this->connector = null;
     }
 }

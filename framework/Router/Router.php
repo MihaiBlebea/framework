@@ -348,7 +348,7 @@ class Router
         {
             array_push($models, $this->request);
         }
-        
+
         call_user_func_array(array($class, $method), $models);
     }
 }

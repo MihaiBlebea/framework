@@ -24,6 +24,6 @@ class ConnectorComponent extends Injector implements ComponentInterface
 
     public function run($instance)
     {
-
+        $instance->close();
     }
 }

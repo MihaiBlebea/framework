@@ -23,17 +23,22 @@ class Connector
 
     public function setUp()
     {
-    
+
     }
 
     public function connect()
     {
-        $connector = new \PDO("mysql:host=" . $this->host . ";dbname=" . $this->dbName . ";charset=utf8", $this->user, $this->password);
+        $connector = new \PDO("mysql:host=" . $this->host . ";dbname=" . $this->dbName . ";charset=utf8", $this->user, $this->password, array(\PDO::ATTR_PERSISTENT => true));
         return $connector;
     }
 
     public function getConnector()
     {
         return $this->connector;
+    }
+
+    public function close()
+    {
+        $this->connector = null;
     }
 }
