@@ -27,10 +27,23 @@ class BraintreePayment implements PaymentInterface
         $this->config = Injector::resolve("Config");
         $config = $this->config->getConfig("payment");
 
-        Configuration::environment($config['Braintree']['environment']);
-        Configuration::merchantId($config['Braintree']['merchantId']);
-        Configuration::publicKey($config['Braintree']['publicKey']);
-        Configuration::privateKey($config['Braintree']['privateKey']);
+        // Check app state
+        $env = $this->config->getConfig("application")["app_environment"];
+        
+        if($env == "development")
+        {
+            Configuration::environment($config['BraintreeSandbox']['environment']);
+            Configuration::merchantId($config['BraintreeSandbox']['merchantId']);
+            Configuration::publicKey($config['BraintreeSandbox']['publicKey']);
+            Configuration::privateKey($config['BraintreeSandbox']['privateKey']);
+
+        } else {
+            Configuration::environment($config['Braintree']['environment']);
+            Configuration::merchantId($config['Braintree']['merchantId']);
+            Configuration::publicKey($config['Braintree']['publicKey']);
+            Configuration::privateKey($config['Braintree']['privateKey']);
+
+        }
     }
 
     public function generateToken()

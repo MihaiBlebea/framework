@@ -29,6 +29,14 @@ class Model {
     private $sortSchema = "";
 
     /**
+     * Schema that holds the limit for the number of query elements
+     * Works for paginating when you have a huge database query
+     *
+     * @var string
+     */
+    private $limitSchema = "";
+
+    /**
      * Schema that holds the keys for the values that
      * that needs inserting or updated in the Database
      *
@@ -201,6 +209,25 @@ class Model {
     }
 
     /**
+     * Get the number of rows in a particular table
+     * Works best with LIMIT and OFFSET to paginate the result
+     *
+     * @return object of model
+     */
+    public function count()
+    {
+        $this->connect();
+        if($this->schema !== "")
+        {
+            $statement = $this->connector->query("SELECT COUNT(*) as count FROM " . $this->getTable() . " WHERE " . $this->schema)->fetchObject();
+        } else {
+            $statement = $this->connector->query("SELECT COUNT(*) as count FROM " . $this->getTable())->fetchObject();
+        }
+        $this->close();
+        return intval($statement->count);
+    }
+
+    /**
      * Get one single row from the database and instantiate the model
      *
      * @return object of model
@@ -229,7 +256,7 @@ class Model {
         {
             throw new Exception("No conditions where selected");
         }
-        $statement = $this->connector->query("SELECT * FROM " . $this->getTable() . " WHERE " . $this->schema . $this->sortSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+        $statement = $this->connector->query("SELECT * FROM " . $this->getTable() . " WHERE " . $this->schema . $this->sortSchema . $this->limitSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
         $this->close();
         return $statement;
     }
@@ -242,7 +269,7 @@ class Model {
     public function selectAll()
     {
         $this->connect();
-        $statement = $this->connector->query("SELECT * FROM " . $this->getTable() . $this->sortSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+        $statement = $this->connector->query("SELECT * FROM " . $this->getTable() . $this->sortSchema . $this->limitSchema)->fetchAll(\PDO::FETCH_CLASS, get_called_class());
         $this->close();
         return $statement;
     }
@@ -262,6 +289,31 @@ class Model {
             throw new Exception("Invalid sorting params.");
         }
         $this->sortSchema = " ORDER BY " . $sortBy . " " . strtoupper($order);
+        return $this;
+    }
+
+    /**
+     * Create sort schema (if null, then no limitSchema applied)
+     *
+     * @param $limit string
+     * @param $offset string
+     * @return sorted array of objects
+     */
+    public function limitBy($limit = null, $offset = null)
+    {
+        $this->limitSchema = "";
+
+        // CHeck if limit is set
+        if($limit !== null)
+        {
+            $this->limitSchema = " LIMIT $limit";
+
+            // Check if offset is set
+            if($offset !== null)
+            {
+                $this->limitSchema .= " OFFSET $offset";
+            }
+        }
         return $this;
     }
 
