@@ -13,6 +13,7 @@ use Braintree\Transaction;
 use Braintree\Customer;
 use Braintree\Subscription;
 use Braintree\WebhookNotification;
+use Exception;
 
 class BraintreePayment implements PaymentInterface
 {
@@ -26,24 +27,13 @@ class BraintreePayment implements PaymentInterface
     {
         $this->config = Injector::resolve("Config");
         $config = $this->config->getConfig("payment");
+        $appEnv = $this->config->getConfig("application")["app_environment"];
 
-        // Check app state
-        $env = $this->config->getConfig("application")["app_environment"];
-        
-        if($env == "development")
-        {
-            Configuration::environment($config['BraintreeSandbox']['environment']);
-            Configuration::merchantId($config['BraintreeSandbox']['merchantId']);
-            Configuration::publicKey($config['BraintreeSandbox']['publicKey']);
-            Configuration::privateKey($config['BraintreeSandbox']['privateKey']);
-
-        } else {
-            Configuration::environment($config['Braintree']['environment']);
-            Configuration::merchantId($config['Braintree']['merchantId']);
-            Configuration::publicKey($config['Braintree']['publicKey']);
-            Configuration::privateKey($config['Braintree']['privateKey']);
-
-        }
+        $braintree_env = ($appEnv == "development") ? "BraintreeSandbox" : "Braintree";
+        Configuration::environment($config[$braintree_env]['environment']);
+        Configuration::merchantId($config[$braintree_env]['merchantId']);
+        Configuration::publicKey($config[$braintree_env]['publicKey']);
+        Configuration::privateKey($config[$braintree_env]['privateKey']);
     }
 
     public function generateToken()
