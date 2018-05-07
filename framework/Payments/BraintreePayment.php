@@ -23,17 +23,19 @@ class BraintreePayment implements PaymentInterface
 
     private $notificationType;
 
+    private $env;
+
     public function __construct()
     {
         $this->config = Injector::resolve("Config");
         $config = $this->config->getConfig("payment");
         $appEnv = $this->config->getConfig("application")["app_environment"];
 
-        $braintree_env = ($appEnv == "development") ? "BraintreeSandbox" : "Braintree";
-        Configuration::environment($config[$braintree_env]['environment']);
-        Configuration::merchantId($config[$braintree_env]['merchantId']);
-        Configuration::publicKey($config[$braintree_env]['publicKey']);
-        Configuration::privateKey($config[$braintree_env]['privateKey']);
+        $this->env = ($appEnv == "development") ? "BraintreeSandbox" : "Braintree";
+        Configuration::environment($config[$this->env]['environment']);
+        Configuration::merchantId($config[$this->env]['merchantId']);
+        Configuration::publicKey($config[$this->env]['publicKey']);
+        Configuration::privateKey($config[$this->env]['privateKey']);
     }
 
     public function generateToken()
@@ -70,7 +72,7 @@ class BraintreePayment implements PaymentInterface
         $result = Subscription::create([
             'paymentMethodToken' => $payment_token,
             'planId'             => $payload["productId"],
-            'merchantAccountId'  => $this->config->getConfig("payment")['braintree']['merchantAccountId']
+            'merchantAccountId'  => $this->config->getConfig("payment")[$this->env]['merchantAccountId']
         ]);
 
         if($result->success)
